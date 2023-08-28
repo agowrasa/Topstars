@@ -1,0 +1,40 @@
+Retrieve the names of all students who are older than 21 years.
+select name from students where age>21;
+
+List the course names along with the total credits of each course.
+select course_name, credits from courses;
+
+Calculate the average age of female students.
+select avg(age) as avg_age from students where gender='female';
+
+Find the courses that have more than 3 credits and have at least one enrollment.
+select c.course_name from courses c where c.credits>3 and exists( select 1 from enrollments e where e.course_id=c.course_id);
+
+List the student names and their grades for the course with course_id 103.
+select s.student_name, e.grade from students s join enrollments e on s.student_id=e.student_id where e.course_id=103;
+
+Calculate the total number of enrollments for each student. Display the student name and the count.
+select s.student_name, count(e.enrollmet_id) as enroll_count from students s 
+join enrollments e on s.student_id=e.student_id 
+group by s.student_name;
+
+Find the student(s) who have the highest grade (in terms of grade letter, e.g., 'A').
+select s.student_name, e.grade from students s join enrollments e on s.student_id=e.student_id where e.grade=(select max(grade) from enrollments);
+
+
+Calculate the average age of students for each course. Display the course name and the average age.
+select c.course_name, avg(s.age) as avg_age from courses c join enrollments e on c.course_id=e.course_id join 
+students s on s.student_id=e.student_id group by c.course_name;
+
+List the course names along with the number of male and female students enrolled in each course.
+select c.course_name, sum(case when s.gender='male' then 1 else 0 end ) as male_students,
+sum(case when s.gender='female' then 1 else 0 end ) as female_students from courses c join enrollments e on c.course_id=e.course_id join 
+students s on s.student_id=e.student_id group by c.course_name;
+
+Calculate the total revenue for each city, considering all orders.
+select c.city, sum(o.total_amount) as total_revenue from customers c join orders o on c.customer_id=o.customer_id group by c.city;
+
+Retrieve the customer names who have placed at least two orders.
+
+select c.customer_name, count(o.order_id) as total_orders from customers c join orders o on c.customer_id=o.customer_id group by c.customer_name
+having total_orders>=2;
